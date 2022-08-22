@@ -29,31 +29,13 @@ class ToDoViewModel: ObservableObject {
     
     func saveData() {
         guard let url = URL(string: "https://alanyzhu.scripts.mit.edu/todo-update.php") else {
-            fetching = false
             return
         }
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
-        
-        do {
-            request.httpBody = try JSONEncoder().encode(todos)
-        } catch {
-            return
-        }
-        
-        // Perform HTTP Request
-        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-            // Check for Error
-            if let error = error {
-                print("Error took place \(error)")
-                return
-            }
-            
-            // Convert HTTP Response Data to a String
-            if let data = data, let dataString = String(data: data, encoding: .utf8) {
-                print("Response data string:\n \(dataString)")
-            }
-        }
+        do { request.httpBody = try JSONEncoder().encode(todos); } catch { return; }
+
+        let task = URLSession.shared.dataTask(with: request) // TODO error handling
         task.resume()
     }
     
@@ -74,6 +56,7 @@ class ToDoViewModel: ObservableObject {
                 return newSection
             })
         } catch {
+            // TODO error handling
             print("well, hopefully this doesn't happen.")
         }
         fetching = false
