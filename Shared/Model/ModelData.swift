@@ -48,13 +48,7 @@ class ToDoViewModel: ObservableObject {
         }
         do {
             let (data, _) = try await URLSession.shared.data(from: url)
-            todos = try JSONDecoder().decode([ToDoSection].self, from: data).map({(section) -> ToDoSection in
-                var newSection = section
-                newSection.todos.sort(by: {(todoA, todoB) -> Bool in
-                    return priorities[todoA.done]! > priorities[todoB.done]! || (priorities[todoA.done]! == priorities[todoB.done]! && todoA.id < todoB.id)
-                })
-                return newSection
-            })
+            todos = try JSONDecoder().decode([ToDoSection].self, from: data)
         } catch {
             // TODO error handling
             print("well, hopefully this doesn't happen.")

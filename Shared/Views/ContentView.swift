@@ -46,7 +46,9 @@ struct ContentView: View {
                             if (todo.done != ToDoState.dn || showAll) {
                                 TodoRow(todo: $todo, todoSection: $section)
                             }
-                        }.buttonStyle(PlainButtonStyle())
+                        }.onMove(perform: {(from, to) -> Void in
+                            move(todos: &section.todos, from:from, to:to)
+                        }).buttonStyle(PlainButtonStyle())
                     }
                 }
                 Button(action: {() -> Void in
@@ -91,6 +93,9 @@ struct ContentView: View {
             AddTodoWindow(section: selectedSection, nextID: nextID, item: $item, show: $showingPopup)
             AddSectionWindow(todoList: $viewModel.todos, nextID: nextSectionID, item: $item, show: $showingSectionPopup)
         }
+    }
+    func move(todos: inout [ToDo], from source: IndexSet, to destination: Int) {
+        todos.move(fromOffsets: source, toOffset: destination)
     }
 }
 
